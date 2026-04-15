@@ -10,47 +10,68 @@ from datetime import datetime
 from .iam_analyzer import Severidad, AnalizadorIAM
 
 
-_COLORES = {
-    Severidad.CRITICA: "color:#c0392b;font-weight:600",
-    Severidad.ALTA:    "color:#e67e22;font-weight:600",
-    Severidad.MEDIA:   "color:#8a6d00;font-weight:600",
-    Severidad.BAJA:    "color:#555;font-weight:600",
+_BADGE_CLASS = {
+    Severidad.CRITICA: "badge badge-critica",
+    Severidad.ALTA:    "badge badge-alta",
+    Severidad.MEDIA:   "badge badge-media",
+    Severidad.BAJA:    "badge badge-baja",
 }
 
 _PLANTILLA_PATH = os.path.join(os.path.dirname(__file__), "..", "front.html")
+_CSS_PATH = os.path.join(os.path.dirname(__file__), "..", "static", "report.css")
+_JS_PATH  = os.path.join(os.path.dirname(__file__), "..", "static", "report.js")
+_MITRE_URL = "https://attack.mitre.org/techniques/{}"
 
 
 def _cargar_plantilla() -> str:
     with open(_PLANTILLA_PATH, "r", encoding="utf-8") as f:
-        return f.read()
+        plantilla = f.read()
+    with open(_CSS_PATH, "r", encoding="utf-8") as f:
+        css = f.read()
+    with open(_JS_PATH, "r", encoding="utf-8") as f:
+        js = f.read()
+    return plantilla.replace("%%CSS%%", css).replace("%%JS%%", js)
 
 
-def _fila(h) -> str:
-    """Genera una fila expandible: resumen visible + detalle oculto."""
-    mitre_resumen = f'<span style="color:#888;font-size:11px">{h.mitre_id}</span>' if h.mitre_id else "—"
-    mitre_detalle = f'<span class="detalle-mitre">{h.mitre_id}</span>' if h.mitre_id else ""
+def _fila(h, idx: int) -> str:
+    badge = f'<span class="{_BADGE_CLASS[h.severidad]}">{h.severidad.value}</span>'
+
+    if h.mitre_id:
+        tid = h.mitre_id.replace(".", "/")
+        mitre_resumen = f'<a class="mitre-tag" href="{_MITRE_URL.format(tid)}" target="_blank">{h.mitre_id}</a>'
+        mitre_detalle = (
+            f'<div class="detalle-mitre">'
+            f'<span class="detalle-lbl">MITRE ATT&CK</span>'
+            f'<a class="mitre-link" href="{_MITRE_URL.format(tid)}" target="_blank">{h.mitre_id}</a>'
+            f'</div>'
+        )
+    else:
+        mitre_resumen = '<span style="color:#ddd">—</span>'
+        mitre_detalle = ""
 
     resumen = (
-        f"<tr>"
-        f"<td><button class='fila-resumen'>"
-        f"<span class='col-sev'><span style='{_COLORES[h.severidad]}'>{h.severidad.value}</span></span>"
-        f"<span class='col-cat'>{h.categoria.replace('_', ' ')}</span>"
-        f"<span class='col-usr'>{h.usuario_id}</span>"
-        f"<span class='col-desc'>{h.descripcion}</span>"
-        f"<span class='col-mitre'>{mitre_resumen}</span>"
-        f"<span class='col-toggle'>▼</span>"
-        f"</button></td>"
-        f"</tr>"
+        f'<tr class="fila-resumen" data-idx="{idx}" data-sev="{h.severidad.value}" onclick="toggleDetalle({idx})">'
+        f'<td>{badge}</td>'
+        f'<td>{h.categoria.replace("_", " ")}</td>'
+        f'<td style="color:#555;font-size:12px">{h.usuario_id}</td>'
+        f'<td>{h.descripcion}</td>'
+        f'<td style="text-align:center">{mitre_resumen}</td>'
+        f'<td class="col-toggle">▼</td>'
+        f'</tr>'
     )
 
     detalle = (
-        f"<tr><td>"
-        f"<div class='detalle'>"
-        f"<p class='detalle-lbl'>Recomendación</p>"
-        f"<p class='detalle-val'>{h.recomendacion}</p>"
-        f"{mitre_detalle}"
-        f"</div>"
-        f"</td></tr>"
+        f'<tr class="fila-detalle" id="detalle-{idx}">'
+        f'<td colspan="6">'
+        f'<div class="detalle-grid">'
+        f'<div>'
+        f'<p class="detalle-lbl">Recomendación</p>'
+        f'<p class="detalle-val">{h.recomendacion}</p>'
+        f'</div>'
+        f'{mitre_detalle}'
+        f'</div>'
+        f'</td>'
+        f'</tr>'
     )
 
     return resumen + detalle
@@ -67,26 +88,26 @@ def _seccion_sin_auditar(fallos: list) -> tuple[str, str]:
         return "", ""
 
     metrica = (
-        f"<div class='metrica'>"
-        f"<span class='num' style='color:#c0392b'>{len(fallos)}</span>"
-        f"<span class='lbl'>Sin auditar</span>"
-        f"</div>"
+        f'<div class="metrica-card sin-aud">'
+        f'<span class="num num-sin-aud">{len(fallos)}</span>'
+        f'<span class="lbl">Sin auditar</span>'
+        f'</div>'
     )
 
     filas = "".join(
-        f"<tr><td><button class='fila-resumen'>"
-        f"<span class='col-cat'>{f.usuario_id}</span>"
-        f"<span class='col-usr'>{f.control}</span>"
-        f"<span class='col-desc' style='color:#888'>{f.motivo}</span>"
-        f"</button></td></tr>"
+        f'<tr>'
+        f'<td>{f.usuario_id}</td>'
+        f'<td>{f.control}</td>'
+        f'<td>{f.motivo}</td>'
+        f'</tr>'
         for f in fallos
     )
 
     seccion = (
-        f"<div class='sin-auditar'>"
-        f"<p class='lbl-seccion'>Controles no auditados ({len(fallos)})</p>"
-        f"<table><tbody>{filas}</tbody></table>"
-        f"</div>"
+        f'<div class="sin-auditar">'
+        f'<div class="sin-auditar-header">Controles no auditados ({len(fallos)})</div>'
+        f'<table class="sin-aud-tabla"><tbody>{filas}</tbody></table>'
+        f'</div>'
     )
 
     return metrica, seccion
@@ -105,15 +126,15 @@ def generar_html(
     entorno_responsable: str = "—",
     entorno_notas: str = "—",
 ) -> str:
-    resumen = analizador.resumen()
+    resumen  = analizador.resumen()
     hallazgos = sorted(analizador.hallazgos, key=lambda h: list(Severidad).index(h.severidad))
     metrica_sin_auditar, seccion_sin_auditar = _seccion_sin_auditar(analizador.controles_fallidos)
 
-    total     = resumen["total_hallazgos"]
-    criticos  = resumen["por_severidad"].get("CRÍTICA", 0)
-    altos     = resumen["por_severidad"].get("ALTA", 0)
-    medios    = resumen["por_severidad"].get("MEDIA", 0)
-    bajos     = resumen["por_severidad"].get("BAJA", 0)
+    total    = resumen["total_hallazgos"]
+    criticos = resumen["por_severidad"].get("CRÍTICA", 0)
+    altos    = resumen["por_severidad"].get("ALTA", 0)
+    medios   = resumen["por_severidad"].get("MEDIA", 0)
+    bajos    = resumen["por_severidad"].get("BAJA", 0)
 
     valores = {
         "%%TITULO%%":               titulo,
@@ -129,7 +150,7 @@ def generar_html(
         "%%PCT_ALTA%%":             str(_pct(altos, total)),
         "%%PCT_MEDIA%%":            str(_pct(medios, total)),
         "%%PCT_BAJA%%":             str(_pct(bajos, total)),
-        "%%FILAS%%":                "".join(_fila(h) for h in hallazgos),
+        "%%FILAS%%":                "".join(_fila(h, i) for i, h in enumerate(hallazgos)),
         "%%METRICA_SIN_AUDITAR%%":  metrica_sin_auditar,
         "%%SECCION_SIN_AUDITAR%%":  seccion_sin_auditar,
         "%%ENTORNO_NOMBRE%%":       entorno_nombre,
@@ -144,10 +165,15 @@ def generar_html(
     return plantilla
 
 
+
+
+
+
 def guardar_reporte(html: str, ruta: str | None = None) -> str:
     if ruta is None:
         ruta = _nombre_con_timestamp("reports/reporte_iam", "html")
-    os.makedirs(os.path.dirname(ruta) or ".", exist_ok=True)
+    directorio = os.path.dirname(ruta) or "."
+    os.makedirs(directorio, exist_ok=True)
     with open(ruta, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"[+] Reporte HTML guardado en: {ruta}")

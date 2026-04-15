@@ -2,292 +2,121 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>IAM Access Review</title>
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    font-size: 13px;
-    color: #1a1a1a;
-    background: #fff;
-    padding: 48px 56px;
-    max-width: 1200px;
-    margin: 0 auto;
-    line-height: 1.5;
-  }
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    border-bottom: 2px solid #1a1a1a;
-    padding-bottom: 12px;
-    margin-bottom: 32px;
-  }
-
-  .header h1 { font-size: 18px; font-weight: 600; }
-
-  .header .meta {
-    font-size: 11px;
-    color: #888;
-    text-align: right;
-    line-height: 1.6;
-  }
-
-  .metricas {
-    display: flex;
-    gap: 40px;
-    margin-bottom: 36px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid #e5e5e5;
-  }
-
-  .metrica { display: flex; flex-direction: column; gap: 2px; }
-
-  .metrica .num {
-    font-size: 28px;
-    font-weight: 700;
-    line-height: 1;
-  }
-
-  .metrica .lbl {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: #999;
-  }
-
-  .num-critica { color: #c0392b; }
-  .num-alta    { color: #e67e22; }
-  .num-media   { color: #8a6d00; }
-  .num-baja    { color: #555; }
-
-  table { width: 100%; border-collapse: collapse; }
-
-  thead th {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: #999;
-    font-weight: 500;
-    text-align: left;
-    padding: 8px 10px;
-    border-bottom: 1px solid #e5e5e5;
-  }
-
-  tbody td {
-    padding: 10px 10px;
-    border-bottom: 1px solid #f0f0f0;
-    vertical-align: top;
-  }
-
-  tbody tr:last-child td { border-bottom: none; }
-  tbody tr:hover td { background: #fafafa; }
-
-  footer {
-    margin-top: 40px;
-    padding-top: 16px;
-    border-top: 1px solid #e5e5e5;
-    font-size: 11px;
-    color: #bbb;
-    display: flex;
-    justify-content: space-between;
-  }
-</style>
+<title>%%TITULO%%</title>
+<style>%%CSS%%</style>
 </head>
 <body>
+<div class="page">
 
 <div class="header">
-  <h1>IAM Access Review</h1>
-  <div class="meta">
-    11 Apr 2026, 07:11<br>
-    5 usuarios activos · 6 totales
+  <div class="header-marca">
+    <div class="header-icono">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M8 1L2 4v4c0 3.3 2.5 6.4 6 7 3.5-.6 6-3.7 6-7V4L8 1z" fill="white" opacity=".9"/>
+      </svg>
+    </div>
+    <h1>IAM Access Review</h1>
+  </div>
+  <div class="header-meta">%%FECHA%%<br>%%USUARIOS_ACTIVOS%% usuarios activos · %%USUARIOS_TOTALES%% totales</div>
+</div>
+
+<div class="entorno">
+  <div class="entorno-campo"><span class="lbl">Entorno</span><span class="val">%%ENTORNO_NOMBRE%%</span></div>
+  <div class="entorno-campo"><span class="lbl">Fuente</span><span class="val">%%ENTORNO_FUENTE%%</span></div>
+  <div class="entorno-campo"><span class="lbl">Responsable</span><span class="val">%%ENTORNO_RESPONSABLE%%</span></div>
+  <div class="entorno-campo"><span class="lbl">Notas</span><span class="val">%%ENTORNO_NOTAS%%</span></div>
+</div>
+
+<div class="panel-superior">
+  <div class="metricas-grid">
+    <div class="metrica-card total">
+      <span class="num num-total">%%TOTAL%%</span>
+      <span class="lbl">Total hallazgos</span>
+    </div>
+    <div class="metrica-card critica">
+      <span class="num num-critica">%%CRITICOS%%</span>
+      <span class="lbl">Críticos</span>
+    </div>
+    <div class="metrica-card alta">
+      <span class="num num-alta">%%ALTOS%%</span>
+      <span class="lbl">Altos</span>
+    </div>
+    <div class="metrica-card media">
+      <span class="num num-media">%%MEDIOS%%</span>
+      <span class="lbl">Medios</span>
+    </div>
+    <div class="metrica-card baja">
+      <span class="num num-baja">%%BAJOS%%</span>
+      <span class="lbl">Bajos</span>
+    </div>
+    %%METRICA_SIN_AUDITAR%%
+  </div>
+
+  <div class="grafico-card">
+    <p class="grafico-titulo">Distribución por severidad</p>
+    <div class="barras">
+      <div class="barra-fila">
+        <span class="barra-lbl">Crítica</span>
+        <div class="barra-track"><div class="barra-fill" data-w="%%PCT_CRITICA%%" style="background:var(--critica)"></div></div>
+        <span class="barra-cnt">%%CRITICOS%%</span>
+      </div>
+      <div class="barra-fila">
+        <span class="barra-lbl">Alta</span>
+        <div class="barra-track"><div class="barra-fill" data-w="%%PCT_ALTA%%" style="background:var(--alta)"></div></div>
+        <span class="barra-cnt">%%ALTOS%%</span>
+      </div>
+      <div class="barra-fila">
+        <span class="barra-lbl">Media</span>
+        <div class="barra-track"><div class="barra-fill" data-w="%%PCT_MEDIA%%" style="background:var(--media)"></div></div>
+        <span class="barra-cnt">%%MEDIOS%%</span>
+      </div>
+      <div class="barra-fila">
+        <span class="barra-lbl">Baja</span>
+        <div class="barra-track"><div class="barra-fill" data-w="%%PCT_BAJA%%" style="background:var(--baja)"></div></div>
+        <span class="barra-cnt">%%BAJOS%%</span>
+      </div>
+    </div>
   </div>
 </div>
 
-<div class="metricas">
-  <div class="metrica">
-    <span class="num">17</span>
-    <span class="lbl">Hallazgos</span>
+<div class="tabla-section">
+  <div class="tabla-toolbar">
+    <div class="filtros">
+      <button class="filtro-btn activo" data-sev="">Todos</button>
+      <button class="filtro-btn" data-sev="CRÍTICA">Crítica</button>
+      <button class="filtro-btn" data-sev="ALTA">Alta</button>
+      <button class="filtro-btn" data-sev="MEDIA">Media</button>
+      <button class="filtro-btn" data-sev="BAJA">Baja</button>
+    </div>
+    <span class="contador" id="contador"></span>
   </div>
-  <div class="metrica">
-    <span class="num num-critica">2</span>
-    <span class="lbl">Críticos</span>
+  <div class="tabla-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:90px">Severidad</th>
+          <th style="width:150px">Categoría</th>
+          <th style="width:110px">Usuario</th>
+          <th>Descripción</th>
+          <th style="width:80px;text-align:center">MITRE</th>
+          <th style="width:28px"></th>
+        </tr>
+      </thead>
+      <tbody>
+        %%FILAS%%
+      </tbody>
+    </table>
   </div>
-  <div class="metrica">
-    <span class="num num-alta">8</span>
-    <span class="lbl">Altos</span>
-  </div>
-  <div class="metrica">
-    <span class="num num-media">6</span>
-    <span class="lbl">Medios</span>
-  </div>
-  <div class="metrica">
-    <span class="num num-baja">1</span>
-    <span class="lbl">Bajos</span>
-  </div>
-  
 </div>
 
-<table>
-  <thead>
-    <tr>
-      <th style="width:80px">Severidad</th>
-      <th style="width:130px">Categoría</th>
-      <th style="width:90px">Usuario</th>
-      <th>Descripción</th>
-      <th>Recomendación</th>
-      <th style="width:70px;text-align:center">MITRE</th>
-    </tr>
-  </thead>
-  <tbody>
-    
-        <tr>
-          <td><span style="color:#c0392b;font-weight:600">CRÍTICA</span></td>
-          <td>MFA</td>
-          <td style="color:#555">usr_001</td>
-          <td>ana.garcia@corp.com no tiene MFA habilitado</td>
-          <td style="color:#444">Habilitar MFA inmediatamente. Forzar via política.</td>
-          <td style="text-align:center"><span style="color:#888;font-size:11px">T1078</span></td>
-        </tr>
-        <tr>
-          <td><span style="color:#c0392b;font-weight:600">CRÍTICA</span></td>
-          <td>MFA</td>
-          <td style="color:#555">usr_003</td>
-          <td>laura.soto@corp.com no tiene MFA habilitado</td>
-          <td style="color:#444">Habilitar MFA inmediatamente. Forzar via política.</td>
-          <td style="text-align:center"><span style="color:#888;font-size:11px">T1078</span></td>
-        </tr>
-        <tr>
-          <td><span style="color:#e67e22;font-weight:600">ALTA</span></td>
-          <td>PRIVILEGIO EXCESIVO</td>
-          <td style="color:#555">usr_001</td>
-          <td>ana.garcia@corp.com posee rol(es) de alto privilegio: ['admin']</td>
-          <td style="color:#444">Aplicar principio de mínimo privilegio. Revisar si el rol es justificado.</td>
-          <td style="text-align:center"><span style="color:#888;font-size:11px">T1078.003</span></td>
-        </tr>
-        <tr>
-          <td><span style="color:#e67e22;font-weight:600">ALTA</span></td>
-          <td>ACCESS KEY ANTIGUA</td>
-          <td style="color:#555">usr_001</td>
-          <td>ana.garcia@corp.com: key MPLE... sin rotar hace 110 días</td>
-          <td style="color:#444">Rotar la access key. Implementar rotación automática cada 90 días.</td>
-          <td style="text-align:center"><span style="color:#888;font-size:11px">T1552.001</span></td>
-        </tr>
-        <tr>
-          <td><span style="color:#e67e22;font-weight:600">ALTA</span></td>
-          <td>INACTIVIDAD</td>
-          <td style="color:#555">usr_003</td>
-          <td>laura.soto@corp.com nunca ha iniciado sesión</td>
-          <td style="color:#444">Deshabilitar cuenta o requerir activación con verificación.</td>
-          <td style="text-align:center"><span style="color:#888;font-size:11px">T1078.004</span></td>
-        </tr>
-        <tr>
-          <td><span style="color:#e67e22;font-weight:600">ALTA</span></td>
-          <td>PRIVILEGIO EXCESIVO</td>
-          <td style="color:#555">usr_003</td>
-          <td>laura.soto@corp.com posee rol(es) de alto privilegio: ['owner']</td>
-          <td style="color:#444">Aplicar principio de mínimo privilegio. Revisar si el rol es justificado.</td>
-          <td style="text-align:center"><span style="color:#888;font-size:11px">T1078.003</span></td>
-        </tr>
-        <tr>
-          <td><span style="color:#e67e22;font-weight:600">ALTA</span></td>
-          <td>ACCESS KEY ANTIGUA</td>
-          <td style="color:#555">usr_003</td>
-          <td>laura.soto@corp.com: key MPLE... sin rotar hace 200 días</td>
-          <td style="color:#444">Rotar la access key. Implementar rotación automática cada 90 días.</td>
-          <td style="text-align:center"><span style="color:#888;font-size:11px">T1552.001</span></td>
-        </tr>
-        <tr>
-          <td><span style="color:#e67e22;font-weight:600">ALTA</span></td>
-          <td>ACCESS KEY ANTIGUA</td>
-          <td style="color:#555">usr_004</td>
-          <td>svc-deploy-ci@corp.com: key MPLE... sin rotar hace 95 días</td>
-          <td style="color:#444">Rotar la access key. Implementar rotación automática cada 90 días.</td>
-          <td style="text-align:center"><span style="color:#888;font-size:11px">T1552.001</span></td>
-        </tr>
-        <tr>
-          <td><span style="color:#e67e22;font-weight:600">ALTA</span></td>
-          <td>CUENTA SERVICIO CONSOLA</td>
-          <td style="color:#555">usr_004</td>
-          <td>svc-deploy-ci@corp.com: cuenta de servicio con acceso interactivo a consola habilitado</td>
-          <td style="color:#444">Deshabilitar el acceso a consola. Las cuentas de servicio solo deben operar via API/keys, nunca via login interactivo.</td>
-          <td style="text-align:center"><span style="color:#888;font-size:11px">T1078.004</span></td>
-        </tr>
-        <tr>
-          <td><span style="color:#e67e22;font-weight:600">ALTA</span></td>
-          <td>PRIVILEGIO EXCESIVO</td>
-          <td style="color:#555">usr_005</td>
-          <td>sofia.vargas@corp.com posee rol(es) de alto privilegio: ['superuser']</td>
-          <td style="color:#444">Aplicar principio de mínimo privilegio. Revisar si el rol es justificado.</td>
-          <td style="text-align:center"><span style="color:#888;font-size:11px">T1078.003</span></td>
-        </tr>
-        <tr>
-          <td><span style="color:#8a6d00;font-weight:600">MEDIA</span></td>
-          <td>PASSWORD ANTIGUA</td>
-          <td style="color:#555">usr_001</td>
-          <td>ana.garcia@corp.com: contraseña sin cambiar hace 400 días</td>
-          <td style="color:#444">Forzar cambio de contraseña. Configurar password policy con rotación máxima de 365 días.</td>
-          <td style="text-align:center"><span style="color:#888;font-size:11px">T1110</span></td>
-        </tr>
-        <tr>
-          <td><span style="color:#8a6d00;font-weight:600">MEDIA</span></td>
-          <td>INACTIVIDAD</td>
-          <td style="color:#555">usr_002</td>
-          <td>carlos.mendez@corp.com inactivo por 120 días</td>
-          <td style="color:#444">Revisar si la cuenta sigue siendo necesaria. Deshabilitar si no.</td>
-          <td style="text-align:center"><span style="color:#888;font-size:11px">T1078</span></td>
-        </tr>
-        <tr>
-          <td><span style="color:#8a6d00;font-weight:600">MEDIA</span></td>
-          <td>PERMISOS DIRECTOS</td>
-          <td style="color:#555">usr_003</td>
-          <td>laura.soto@corp.com tiene 2 permiso(s) asignados directamente</td>
-          <td style="color:#444">Migrar permisos a grupos o roles. Eliminar asignaciones directas.</td>
-          <td style="text-align:center">—</td>
-        </tr>
-        <tr>
-          <td><span style="color:#8a6d00;font-weight:600">MEDIA</span></td>
-          <td>ACCESS KEY INACTIVA</td>
-          <td style="color:#555">usr_003</td>
-          <td>laura.soto@corp.com: key MPLE... nunca usada, creada hace 200 días</td>
-          <td style="color:#444">Revocar la key si no corresponde a una integración pendiente.</td>
-          <td style="text-align:center"><span style="color:#888;font-size:11px">T1078</span></td>
-        </tr>
-        <tr>
-          <td><span style="color:#8a6d00;font-weight:600">MEDIA</span></td>
-          <td>PERMISOS DIRECTOS</td>
-          <td style="color:#555">usr_004</td>
-          <td>svc-deploy-ci@corp.com tiene 1 permiso(s) asignados directamente</td>
-          <td style="color:#444">Migrar permisos a grupos o roles. Eliminar asignaciones directas.</td>
-          <td style="text-align:center">—</td>
-        </tr>
-        <tr>
-          <td><span style="color:#8a6d00;font-weight:600">MEDIA</span></td>
-          <td>ACCESS KEY INACTIVA</td>
-          <td style="color:#555">usr_004</td>
-          <td>svc-deploy-ci@corp.com: key MPLE... activa pero sin uso hace 60 días</td>
-          <td style="color:#444">Revocar la key si no está en uso activo. Credenciales inactivas amplían la superficie de ataque.</td>
-          <td style="text-align:center"><span style="color:#888;font-size:11px">T1078</span></td>
-        </tr>
-        <tr>
-          <td><span style="color:#555;font-weight:600">BAJA</span></td>
-          <td>ACUMULACION ROLES</td>
-          <td style="color:#555">usr_003</td>
-          <td>laura.soto@corp.com acumula 4 roles</td>
-          <td style="color:#444">Revisar si todos los roles son necesarios. Posible privilege creep.</td>
-          <td style="text-align:center"><span style="color:#888;font-size:11px">T1098</span></td>
-        </tr>
-  </tbody>
-</table>
-
-
+%%SECCION_SIN_AUDITAR%%
 
 <footer>
   <span>IAM Access Review Toolkit</span>
   <span>Confidencial — uso interno</span>
 </footer>
 
+</div>
+<script>%%JS%%</script>
 </body>
 </html>
