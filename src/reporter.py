@@ -268,6 +268,32 @@ footer { margin-top: 28px; font-size: 11px; color: #ccc; display: flex; justify-
 /* ── Filtrado ── */
 .fila-resumen.filtrada { display: none; }
 .fila-detalle.filtrada { display: none !important; }
+
+/* ── Badge manual ── */
+.badge-manual {
+  display: inline-block;
+  margin-left: 5px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  background: #e8f4fd;
+  color: #1a6fa8;
+  vertical-align: middle;
+}
+
+/* ── Nota del analista en detalle ── */
+.detalle-nota {
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: #fffbea;
+  border-left: 2px solid #f0c040;
+  border-radius: 0 3px 3px 0;
+}
+
+.detalle-nota .detalle-lbl { color: #b8860b; }
+.detalle-nota .detalle-val { color: #5a4a00; }
 """
 
 _JS = """
