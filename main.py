@@ -158,12 +158,20 @@ def cargar_usuarios(fuente: str, perfil: str = None) -> tuple[list[Usuario], lis
         print(f"[+] {len(usuarios)} usuarios obtenidos de Azure AD")
         return usuarios, fallos
 
+    if fuente == "ldap":
+        from src.ldap_connector import ConectorLDAP
+        print("[*] Conectando a LDAP / Active Directory...")
+        conector = ConectorLDAP()
+        usuarios, fallos = conector.obtener_usuarios()
+        print(f"[+] {len(usuarios)} usuarios obtenidos de Active Directory")
+        return usuarios, fallos
+
     raise ValueError(f"Fuente no reconocida: {fuente}")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="IAM Access Review Toolkit")
-    parser.add_argument("--fuente", choices=["demo", "aws", "azure"], default="demo")
+    parser.add_argument("--fuente", choices=["demo", "aws", "azure", "ldap"], default="demo")
     parser.add_argument("--perfil", help="Perfil AWS (opcional)", default=None)
     parser.add_argument("--salida", default="reports/reporte_iam.html")
     args = parser.parse_args()

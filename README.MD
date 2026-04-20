@@ -63,8 +63,4 @@ MEDIA: Desviaciones de mejores prácticas.
 BAJA: Observaciones de higiene de identidad.
 INFO/ERROR: Fallos en la recolección de datos que requieren revisión manual.
 
-Información adicional: En caso de hacer reportes, estos se irán añadiendo en formato .html en la carpeta reports. 
-
-## Próximas integraciones
-
-- [ ] Conector LDAP / Active Directory
+Información adicional: En caso de hacer reportes, estos se irán añadiendo en formato .html en la carpeta reports.
